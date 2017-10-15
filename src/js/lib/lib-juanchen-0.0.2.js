@@ -212,14 +212,6 @@ define(['zepto'],function($){
         };
     };
 
-    //【原生js兼容获取元素计算后的样式】
-    juanchen.tools.getStyle=function(obj,attr){
-        if(window.getComputedStyle){
-            return window.getComputedStyle(obj,null)[attr];
-        }else{
-            return obj.currentStyle[attr];
-        }
-    };
 
 	//【对象转字符串】
 	juanchen.tools.obj2str=function(obj){
@@ -426,8 +418,37 @@ define(['zepto'],function($){
 
 
 
+    //纯属学习【原生js兼容获取元素计算后的样式】
+    juanchen.tools.getStyle=function(obj,attr){
+        if(window.getComputedStyle){
+            return window.getComputedStyle(obj,null)[attr];
+        }else{
+            return obj.currentStyle[attr];
+        }
+    };
 
-
+   /*纯属学习20171015【兼容的获取元素样式的方法】*/
+    juanchen.tools.getStyle2=function(elem, name){
+        if(elem.style[name])
+        {	//如果属性存在于style[]中，直接取
+            return elem.style[name];
+        }
+        else if(elem.currentStyle)
+        {	//否则 尝试IE的方法
+            return elem.currentStyle[name];
+        }
+        else if(document.defaultView && document.defaultView.getComputedStyle)
+        {	//尝试W3C的方式
+            name = name.replace(/([A-Z])/g, "-$1");//W3C中为textAlign样式，转为text-align
+            name = name.toLowerCase();
+            var s = document.defaultView.getComputedStyle(elem, "");
+            return s && s.getPropertyValue(name);
+        }
+        else
+        {
+            return null;
+        }
+    };
 
 
 
