@@ -1,0 +1,1 @@
+require(["../require-config","../lib/lib-flexible"],function(i){require(["juan"],function(i){console.dir(i)})});

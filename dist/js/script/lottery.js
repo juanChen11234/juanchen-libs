@@ -1,0 +1,1 @@
+require(["../require-config"],function(){require(["Lottery"],function(e){function t(e){document.getElementById("drawPercent").innerHTML=e+"%"}var n=new e("lotteryContainer","imgs/lottery_mask.png","image",400,300,t);n.init("imgs/lottery.jpg","image"),document.getElementById("freshBtn").onclick=function(){t(0),n.init("imgs/lottery.jpg","image")}})});
