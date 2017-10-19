@@ -3,6 +3,10 @@
  *  QQ 528159689
  */
 
+
+ //inputWithCheck要改，改成用的时候再绑定。
+ //只能输入数字也写成用的时候再绑定。
+
 //必须在微信Weixin JSAPI的WeixinJSBridgeReady才能生效
 //document.addEventListener("WeixinJSBridgeReady", callback, false);
 
@@ -15,7 +19,7 @@ define(['zepto'],function($){
      *  滚动到页面某个地方就触发callback
      */
 
-    //fn.bind() ie8
+    //fn.bind() 
     if (!Function.prototype.bind) {
         Function.prototype.bind = function (context) {
             //获取要传入的所有参数
@@ -34,13 +38,13 @@ define(['zepto'],function($){
             }
         }
     }
-    //str.trim() ie8
+    //str.trim() 
     if(!String.prototype.trim){
         String.prototype.trim=function(){
             return this.replace(/(^\s*)|(\s*$)/g, "");
         }
     }
-    //arr.indexOf()  ie8
+    //arr.indexOf()  
     if (!Array.prototype.indexOf) {
         Array.prototype.indexOf = function(elt /*, from*/) {
 
@@ -63,7 +67,29 @@ define(['zepto'],function($){
             return -1;
         };
     }
-    //html:placeholder ie8  jquery.placeholder.js
+    //不支持placeholder浏览器下对placeholder进行处理
+    if (document.createElement('input').placeholder !== '') {
+        $('[placeholder]').focus(function () {
+            var input = $(this);
+            if (input.val() == input.attr('placeholder')) {
+                input.val('');
+                input.removeClass('placeholder');
+            }
+        }).blur(function () {
+            var input = $(this);
+            if (input.val() == '' || input.val() == input.attr('placeholder')) {
+                input.addClass('placeholder');
+                input.val(input.attr('placeholder'));
+            }
+        }).blur().parents('form').submit(function () {
+            $(this).find('[placeholder]').each(function () {
+                var input = $(this);
+                if (input.val() == input.attr('placeholder')) {
+                    input.val('');
+                }
+            });
+        });
+    }
     //window.requestAnimationFrame
     (function() {
         var lastTime = 0;
@@ -451,6 +477,19 @@ define(['zepto'],function($){
     };
 
 
+	/*
+		【返回上一页】
+	*/
+	juanchen.tools.backLastPage=function(){
+		
+		//window.location.reload();   刷新
+		//window.history.go(1); //前进
+		window.history.go(-1);  //返回+刷新
+		
+		//window.history.forward(); //前进
+		//window.histoty.back(); //返回
+		
+	}
 
 
     //------------------------- dores 响应class -----------------------------------------
@@ -929,6 +968,10 @@ define(['zepto'],function($){
     return juanchen;
 
 });
-
-
+/*暗黑：
+*   获取模拟的静态变量里面的对象
+ Object.defineProperty(Object.prototype,"_self",{
+    get:function(){return this;}
+ });
+* */
 
