@@ -253,7 +253,9 @@ define(['zepto'],function($){
     juanchen.tools.reverseStr=function(str){
         return str.split("").reverse().join("");
     };
+	
 
+	
     //【图片上传】
     /*$inputFile：jq的inputFile对象，
      url：上传的url，
@@ -284,12 +286,22 @@ define(['zepto'],function($){
         });
     };
 
-    //【判断是不是ie浏览器】
+    // 【判断是不是数组】
+	juanchen.tools.isArray(something){
+		return Object.prototype.toString.call(objOrArr) === "[object Array]";
+	}
+	
+	// 【判断是不是对象】
+	juanchen.tools.isObject(something){
+		return Object.prototype.toString.call(objOrArr) === "[object Object]";
+	}
+	
+	//【判断是不是ie浏览器】
     juanchen.tools.isIE=function(){
         return !!("ActiveXObject" in window||window.ActiveXObject)||false;
     };
 
-	//【获取联网状态:并没有什么卵用】
+	//【获取联网状态:并没有什么用】
 	juanchen.tools.getConnectionType=function(){
 		var connection=navigator.connection||navigator.mozConnection||navigator.webkitConnection||{type:'unknow'};
 		var type_text=['unknown','ethernet','wifi','2g','3g','4g','none'];
