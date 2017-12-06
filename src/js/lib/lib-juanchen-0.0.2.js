@@ -4,7 +4,7 @@
  */
 
 
- //inputWithCheck要改，改成用的时候再绑定。
+ //inputWithCheck要改，改成用的时候再绑定
  //只能输入数字也写成用的时候再绑定。
 
 //必须在微信Weixin JSAPI的WeixinJSBridgeReady才能生效
