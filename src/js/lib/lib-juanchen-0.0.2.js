@@ -238,6 +238,28 @@ define(['zepto'],function($){
         };
     };
 
+	// 【去掉对象或者数组中的空值项】
+	juanchen.tools.cutEmptyItem = function(objOrArr){
+		 if (Object.prototype.toString.call(objOrArr) === "[object Object]") {
+            const resObj = {};
+            let key;
+            for (key in objOrArr) {
+                if (objOrArr.hasOwnProperty(key) && objOrArr[key]) {
+                    resObj[key] = objOrArr[key];
+                }
+            }
+            return resObj;
+        } else if (Object.prototype.toString.call(objOrArr) === "[object Array]") {
+            const resArr = [];
+            let i;
+            for (i = 0; i < objOrArr.length; i++) {
+                if (objOrArr[i] !== '' && objOrArr[i] !== undefined && objOrArr[i] !== null) {
+                    resArr.push(objOrArr[i]);
+                }
+            }
+            return resArr;
+        }
+	}
 
 	//【对象转字符串】
 	juanchen.tools.obj2str=function(obj){
@@ -371,22 +393,23 @@ define(['zepto'],function($){
             }
             //点击时元素相对于滚动条向下滚动的像素值，是一个正数
             var curScrollTop=param.$scrollEle.scrollTop();
+			// 基础的Step
+            var  basicStep = Math.abs(targetScrollTop - curScrollTop) > 3000 ? 100 : 15;
             //本次点击移动的方向
             var dir=curScrollTop<targetScrollTop?1:-1;
             //本次点击的interval
-            var interval=param.allTime/(Math.abs(targetScrollTop-curScrollTop)/step);
-
-            var step;
+            var interval=param.allTime/(Math.abs(targetScrollTop-curScrollTop)/basicStep);
+            // var step;
 
             if(timer===null){
                 timer=setInterval(function(){
 
-                    step=Math.abs(targetScrollTop-curScrollTop)<15?1:15;
+                    var _step=Math.abs(targetScrollTop-curScrollTop)<15?1:basicStep;
 
                     if((dir>0&&curScrollTop>targetScrollTop)||(dir<0&&curScrollTop<targetScrollTop)){
                         juanchen.tools.clearInterval(timer);
                     }else{
-                        curScrollTop+=dir*step;
+                        curScrollTop+=dir*_step;
                         param.$scrollEle.scrollTop(curScrollTop);
                     }
 
