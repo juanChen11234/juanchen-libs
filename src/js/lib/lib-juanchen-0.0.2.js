@@ -159,6 +159,109 @@ define(['zepto'],function($){
 
     //------------------------ tools 工具-----------------------------------------------
 
+	// 【从href中获取Obj】
+	juanchen.tools.getQueryObjFromHref = function(str, condition) {
+		 
+		/*
+        * condition : {isGov: '_channel', isKr: '_lang'}
+        * */
+
+        str = decodeURIComponent(str);
+        var _str = str.slice(str.indexOf('?') + 1);
+
+        if (!_str) {
+            return {};
+        }
+
+        let res = {};
+        _str.split('&').forEach( s => {
+            let tempArr = s.split('=');
+            let _key = tempArr[0], _val = tempArr[1];
+
+            if ( condition && condition[_key] && _val === '1') {
+                res[condition[_key]] = _key;
+
+            } else {
+                res[_key] = _val || '';
+            }
+
+
+        });
+        return res;
+	}
+
+	// 【格式化json字符串】
+	juanchen.tools.beautifyJsonString = function(str) {
+		// let str = '{"where":{"AND":[["title","<","1"],["content","in","2"],["nickname","like","%b"],{"AND":[["name","!=","A"]]}]}}';
+
+        if (!str) {
+            return '';
+        }
+
+        var patt = new RegExp('(AND":\\[)|(OR":\\[)', 'g');
+        var result;
+
+        str =  str.replace(/(\n)|(\s+)/ig, '');
+        str =  str.replace(/where":{/ig, 'where":{\n    ');
+        str =  str.replace(/],/ig, '],\n');
+        str =  str.replace(/AND":\[/ig, 'AND":\[\n');
+        str =  str.replace(/OR":\[/ig, 'OR":\[\n');
+
+        var jieGuo = str;
+
+        while ((result = patt.exec(str)) != null)  {
+            jieGuo = jieGuo.slice(0, result.index) +  jieGuo.slice(result.index).replace(/\["/g, '    ["');
+            jieGuo = jieGuo.slice(0, result.index) +  jieGuo.slice(result.index).replace(/{"/g, '    {"');
+        }
+        console.log(jieGuo);
+
+        return jieGuo;
+	}
+
+
+	// 【去掉数组或则对象中的空值】
+	juanchen.tools.cutEmptyItem = function(objOrArr) {
+		var res;
+        if (Object.prototype.toString.call(objOrArr) === '[object Object]') {
+            res = {};
+            let key;
+            for (key in objOrArr) {
+                if (objOrArr.hasOwnProperty(key) && objOrArr[key] !== ''
+                    && objOrArr[key] !==  undefined && objOrArr[key] !== null) {
+                    res[key] = objOrArr[key];
+                }
+            }
+        } else if (Object.prototype.toString.call(objOrArr) === '[object Array]') {
+            res = [];
+            let i;
+            for (i = 0; i < objOrArr.length; i++) {
+                if (objOrArr[i] !== '' && objOrArr[i] !== undefined && objOrArr[i] !== null) {
+                    res.push(objOrArr[i]);
+                }
+            }
+        }
+        return res;
+	}
+
+	// 【去掉html中的空元素】
+	juanchen.tools.cutEmptyEleFormInnerhtml = function(htmlStr) {
+		if (!htmlStr)
+		{
+			return '';
+		}
+		// 去掉空格
+		htmlStr = htmlStr.replace(/\s+/ig, '');
+
+		var reg = /<([a-z]+?)(?:\s+?[^>]*?)?>\s*?(<\/?br>)*?(&nbsp;)*?(\n)*?<\/\1>/ig;
+		while (reg.test(htmlStr)) {
+            htmlStr = htmlStr.replace(reg, '');
+        }
+
+		return htmlStr;
+
+	}
+
+
     //【事件绑定】
     juanchen.tools.addEvent=(function() {
         var fn=null;
