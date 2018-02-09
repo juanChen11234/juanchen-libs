@@ -192,30 +192,7 @@ define(['zepto'],function($){
 
 	// 【格式化json字符串】
 	juanchen.tools.beautifyJsonString = function(str) {
-		// let str = '{"where":{"AND":[["title","<","1"],["content","in","2"],["nickname","like","%b"],{"AND":[["name","!=","A"]]}]}}';
-
-        if (!str) {
-            return '';
-        }
-
-        var patt = new RegExp('(AND":\\[)|(OR":\\[)', 'g');
-        var result;
-
-        str =  str.replace(/(\n)|(\s+)/ig, '');
-        str =  str.replace(/where":{/ig, 'where":{\n    ');
-        str =  str.replace(/],/ig, '],\n');
-        str =  str.replace(/AND":\[/ig, 'AND":\[\n');
-        str =  str.replace(/OR":\[/ig, 'OR":\[\n');
-
-        var jieGuo = str;
-
-        while ((result = patt.exec(str)) != null)  {
-            jieGuo = jieGuo.slice(0, result.index) +  jieGuo.slice(result.index).replace(/\["/g, '    ["');
-            jieGuo = jieGuo.slice(0, result.index) +  jieGuo.slice(result.index).replace(/{"/g, '    {"');
-        }
-        console.log(jieGuo);
-
-        return jieGuo;
+		
 	}
 
 
@@ -412,12 +389,12 @@ define(['zepto'],function($){
     };
 
     // 【判断是不是数组】
-	juanchen.tools.isArray(something){
+	juanchen.tools.isArray=function(objOrArr){
 		return Object.prototype.toString.call(objOrArr) === "[object Array]";
 	}
 	
 	// 【判断是不是对象】
-	juanchen.tools.isObject(something){
+	juanchen.tools.isObject=function(objOrArr){
 		return Object.prototype.toString.call(objOrArr) === "[object Object]";
 	}
 	
@@ -525,26 +502,44 @@ define(['zepto'],function($){
     /*
     * tips:固定定位的只能相对于doc,其他应该相对于screen
     * */
-    juanchen.tools.whenWindowScroll=function(param){
+    juanchen.tools.whenScroll=function(param){
 
         /*
-         //tips：同时给了临界点和最值，优先使用临界点判断、
-        param={
-            //监视类型，calcDocScroll计算文档滚动的距离，calcDomRToScreen计算元素相对于屏幕顶部的距离
-            type:'calcDocScroll',
-            //临界值
-            offsetTopCritical:200,
-            //最小值与最大值
-            offsetTopMin:,
-            offsetTopMax:,
-            callback_in:fn
-            callback_out:fn
-        };
-        */
+        //tips：同时给了临界点和最值，优先使用临界点判断、
+        
+		用法1：监听容器滚动了多少
+		param = {
+			type: "calcDocScroll",
+            scrollContainer: $('.wrap'), // 滚动的容器
+            offsetTopCritical: 300,//文档滚动临界点
+            callback_in: function () {
+               
+            },
+            callback_out: function () {
+                
+            }
+		}
+
+		用法2：监听容器滚动的时候，某个元素相对于屏幕的位置
+		param = {
+			type:'calcDomRToScreen',
+            scrollContainer: $('.wrap'), // 滚动的容器
+            dom:document.getElementById('ai'), // 计算容器内元素 #ai 相对于屏幕的位置
+            offsetTopMin:window.innerHeight*0.05,
+            offsetTopMax:window.innerHeight*0.35,
+            callback_in:function(){
+               
+            },
+            callback_out:function(){
+                
+            }
+		}
+		
+		*/
 
         if(param.type=='calcDomRToScreen')
         {//计算元素相对于屏幕的位置。
-            juanchen.CONST.get('$window').on('scroll',function(){
+            param.$scrollContainer.on('scroll',function(){
                 window.requestAnimationFrame(function(){
                     var domOffset2Screen=juanchen.tools.getPosRelativeToScreen(param.dom).top;
                     //domOffset2Screen 最上面是0，正方向是从上向下
@@ -559,7 +554,7 @@ define(['zepto'],function($){
         }
         else
         {//计算文档滚动了多少，
-            juanchen.CONST.get('$window').on('scroll',function(){
+            param.$scrollContainer.on('scroll',function(){
                 window.requestAnimationFrame(function(){
                     var doc_scrollTop=document.documentElement.scrollTop || document.body.scrollTop;
                     if(isTarget(doc_scrollTop)){
