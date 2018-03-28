@@ -1,22 +1,33 @@
+
+/*
+å…ˆç”¨ç›¸å¯¹è·¯å¾„å¼•å…¥ require-config
+ç„¶åå°±å¯ä»¥ã€‚ã€‚ã€‚
+require(['../require-config'],function(){
+    require(['juan','rgbaster','iphone-inline-video'],function() {
+
+    })
+);
+*/
+
 define(function(){
     //"http://libs.baidu.com/jquery/2.0.3/jquery",
     require.config({
-        baseUrl:'src/js',
+        baseUrl:'../src/js',
         paths: {
-            "jquery": "lib/jquery-3.2.0.min",
-            'zepto':'lib/lib-zepto.min',
-            "juan": "lib/lib-juanchen-0.0.2",
-            'rgbaster':'lib/lib-rgbaster.min',
-            'Juan-2speak':'lib/lib-Juan-2speak',
-            'Lottery':'lib/lib-Lottery',
-            'fastClick':'lib/lib-fastClick',
-            'zhiwen':'lib/lib-zhiwen',
-            'iphone-inline-video':'lib/lib-iphone-inline-video.min'
+            "jquery": "jquery-3.2.0.min",
+            'zepto':'lib-zepto.min',
+            "juan": "lib-juanchen-0.0.2",
+            'rgbaster':'lib-rgbaster.min',
+            'Juan-2speak':'lib-Juan-2speak',
+            'Lottery':'lib-Lottery',
+            'fastClick':'lib-fastClick',
+            'zhiwen':'lib-zhiwen',
+            'iphone-inline-video':'lib-iphone-inline-video.min',
+            'juanchen-jquery-plugin':'lib-juanchen-jquery-plugin'
         },
         shim:{
             'rgbaster':{
-                //depsÊı×é ±íÃ÷¸ÃÄ£¿éµÄÒÀÀµĞÔ¡£
-                exports:"RGBaster"//Õâ¸öÄ£¿éÍâ²¿µ÷ÓÃÊ±µÄÃû³Æ
+                exports:"RGBaster"
             },
             'zepto':{
                 exports:"Zepto"
@@ -25,4 +36,5 @@ define(function(){
         }
     });
 });
+
 
