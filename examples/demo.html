@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <script defer async data-main="./script/demo" src="../src/js/require.js"></script>
+    <title>Demo</title>
+    <style>
+        /*
+        -------------------【【Loading】】-------------------
+        <div class="c_loading" id="c_loading">
+            <div class="con">
+                <p><img src="imgs/loading.gif" alt="正在加载"/></p>
+                <p class="progress" >0%</p>
+            </div>
+        </div>
+        */
+
+        .c_loading {
+            text-align: center;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .c_loading .con {
+            background-color: #fff;
+            position: absolute;
+            left: 35%;
+            width: 30%;
+            top: 30%;
+        }
+
+        .c_loading img {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <p>是ie吗：
+        <span id="isIE"></span>
+    </p>
+    <p></p>
+    <div id="dd">
+        我的位置是：
+        <span id="showPosRelToScreen"></span>
+    </div>
+    <p></p>
+    <div>
+        上传文件：
+        <input type="file" id="upload">
+    </div>
+    <p></p>
+    <div>
+        <video id="video" preload="auto" src="http://ask.ivideo.sina.com.cn/v_play_ipad.php?vid=143639295&tags=h5_jsplay"></video>
+        <button id="btn-palyVideo">播放</button>
+        <button id="btn-pauseVideo">暂停</button>
+    </div>
+    <p></p>
+    <div id="hrefToObj">
+        <h2>locationHref => {};</h2>
+        <p>
+            https://www.baidu.com/s?ie=utf-8&newi=1&mod=1&isbd=1&isid=f6bc1ddf0009280f&wd=amp%3B&rsv_spt=1&rsv_iqid=0xef26408d00096699&issp=1&f=3&rsv_bp=1&rsv_idx=2&ie=utf-8&rqlang=cn&tn=baiduhome_pg&rsv_enter=0&oq=amp%253B&rsv_t=c300%2FTj4AesXKGJi7D9ay6MdAX57UvPAkRxXnNKCidmbrgLbLZc4Lh%2FSUbKUeJ5RChIM&rsv_pq=f6bc1ddf0009280f&rsv_sug3=12&rsv_sug1=10&rsv_sug7=100&prefixsug=amp%253B&rsp=0&rsv_sug4=832&bs=amp%3B&rsv_sid=1457_21098_20697_20928&_ss=1&clist=&hsug=&f4s=1&csor=4&_cr1=36280
+        </p>
+        <textarea style="width:100%;height:300px;"></textarea>
+    </div>
+    <p></p>
+    <button id="btn-simple-alert">alert simple</button>
+    <button id="btn-coplex-alert"> alert more info</button>
+    <p></p>
+    <div>
+        <button id="btn-add-music">加个音乐</button>
+    </div>
+    <p></p>
+    <div>
+        <button id="btn-to-top">返回顶部</button>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <!--loading-->
+    <div class="c_loading" id="loading">
+        <div class="con">
+            <p>
+                <img src="./assets/imgs/loading.gif" alt="正在加载" />
+            </p>
+            <p class="progress hide">0%</p>
+        </div>
+    </div>
+    <p></p>
+
+
+</body>
+
+</html>
