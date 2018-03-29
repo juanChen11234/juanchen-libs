@@ -6,8 +6,6 @@
  */
 
 
-
-
 (function ($) {
     var _uniqueExtend = null;
     var obj_extend_to_fn = {},
@@ -203,6 +201,34 @@
         isIE: function () {
             return !!("ActiveXObject" in window || window.ActiveXObject) || false;
         },
+        /**
+         * @return string ; 'Mac/Unix/Linux/Win2000/winXP/Win2003/WinVista/Win7/Win10/other'
+         */
+        detectOS:function(){
+            var sUserAgent = navigator.userAgent;
+            var isWin = (navigator.platform == "Win32") || (navigator.platform == "Windows");
+            var isMac = (navigator.platform == "Mac68K") || (navigator.platform == "MacPPC") || (navigator.platform == "Macintosh") || (navigator.platform == "MacIntel");
+            if (isMac) return "Mac";
+            var isUnix = (navigator.platform == "X11") && !isWin && !isMac;
+            if (isUnix) return "Unix";
+            var isLinux = (String(navigator.platform).indexOf("Linux") > -1);
+            if (isLinux) return "Linux";
+            if (isWin) {
+                var isWin2K = sUserAgent.indexOf("Windows NT 5.0") > -1 || sUserAgent.indexOf("Windows 2000") > -1;
+                if (isWin2K) return "Win2000";
+                var isWinXP = sUserAgent.indexOf("Windows NT 5.1") > -1 || sUserAgent.indexOf("Windows XP") > -1;
+                if (isWinXP) return "WinXP";
+                var isWin2003 = sUserAgent.indexOf("Windows NT 5.2") > -1 || sUserAgent.indexOf("Windows 2003") > -1;
+                if (isWin2003) return "Win2003";
+                var isWinVista= sUserAgent.indexOf("Windows NT 6.0") > -1 || sUserAgent.indexOf("Windows Vista") > -1;
+                if (isWinVista) return "WinVista";
+                var isWin7 = sUserAgent.indexOf("Windows NT 6.1") > -1 || sUserAgent.indexOf("Windows 7") > -1;
+                if (isWin7) return "Win7";
+                var isWin10 = sUserAgent.indexOf("Windows NT 10") > -1 || sUserAgent.indexOf("Windows 10") > -1;
+                if (isWin10) return "Win10";
+            }
+            return "other";
+        },
         backLastPage: function () {
 
             //window.location.reload();   刷新
@@ -262,120 +288,95 @@
             }
         },
         AlertNum: 0,
-        Alert: function () {
+        /**
+         * @param object {
+         *  html:'<p><img src="你好/a.jpg"/></p>',
+         *  btn_sure_txt:"",
+         *  btn_cancle_txt:"",
+         *  callback_sure:null,
+         *  callback_cancel:null,
+         * }
+         */
+        Alert: function (params) {
             // css
             var $body = $('body'),
                 $alertEle = null;
-            var initCSS = function () {
-                var base_css = [
-                    '.c_alert{display: none;position:fixed;left:0;right:0;top:0;bottom:0;z-index:999;background-color: rgba(0,0,0,0.7);}',
-                    '.c_alert.active{display: block;}',
-                    '.c_alert .con{text-align: center;background-color: #fff;padding:3%;position: absolute;top:20%;left:50%;transform:translateX(-50%);-webkit-transform:translateX(-50%);-ms-transform:translateX(-50%)}',
-                    '.c_alert_btn {width:30%;font-size:13px;margin:0 10px;display: inline-block;background-color: #E40013;color:#fff;text-decoration:none;}'
-                ];
-                $('head').append("<style class='juan-alert-style'>" + base_css.join('') + "</style>");
-                $body.on("click", ".c_alert .c_alert_btn", function (e) {
-                    $(e.target).parents(".c_alert").toggleClass('active').find('.con').html('');
-                });
-            }
+          
             if ($('.juan-alert-style').length < 1) {
+                      
+                var initCSS = function () {
+                    var base_css = [
+                        '.c_alert{display: none;position:fixed;left:0;right:0;top:0;bottom:0;z-index:999;background-color: rgba(0,0,0,0.7);}',
+                        '.c_alert.active{display: block;}',
+                        '.c_alert .con{text-align: center;background-color: #fff;padding:3%;position: absolute;top:20%;left:50%;transform:translateX(-50%);-webkit-transform:translateX(-50%);-ms-transform:translateX(-50%)}',
+                        '.c_alert_btn {width:30%;font-size:13px;margin:0 10px;display: inline-block;background-color: #E40013;color:#fff;text-decoration:none;}'
+                    ];
+                    $('head').append("<style class='juan-alert-style'>" + base_css.join('') + "</style>");
+                    $body.on("click", ".c_alert .c_alert_btn", function (e) {
+                        $(e.target).parents(".c_alert").toggleClass('active').find('.con').html('');
+                    });
+                }
+
                 initCSS();
             }
+            
             // ---------------
 
+            var _param = {
+                html: params.html || '内容',
+                btn_sure_txt: '',
+                btn_cancel_txt: '',
+                callback_sure: params.callback_sure || null,
+                callback_cancel: params.callback_cancel || null,
+            };
 
-            // 复杂版本：参数是一个对象
-            // obj={btn_sure:"",btn_cancle:"",callback_sure:null,callback_cancel:null,content:'你好/a.jpg'};
-            // 一个按钮，两个按钮，按钮的回调
-
-            // 简单版本：参数是contentText,btnText，
-
-
-            var contentHtml, contentText;
-            if (Object.prototype.toString.call(arguments[0]) == '[object Object]') {
-                //复杂版本：参数是一个对象
-                //obj={btn_sure:"",btn_cancle:"",callback_sure:null,callback_cancel:null,content:'你好/a.jpg'};
-                //一个按钮，两个按钮，按钮的回调
-                //内容是文字，内容是图片
-                var arg = arguments[0];
-                contentText = arg.content;
-                var btn_sure, btn_html;
-
-
-                //1 确定按钮有吗
-                if (arg.hasOwnProperty('btn_sure')) {
-                    btn_sure = arg.btn_sure;
-                } else {
-                    btn_sure = '确定';
-                }
-                //2 确定的回调有吗
-                if (arg.hasOwnProperty('callback_sure')) {
-                    $alertEle.one("click", '.c_alert_btn.sure', arg.callback_sure);
-                }
-
-
-                btn_html = '<a href="javascript:void(0);"  class="c_alert_btn sure">' + btn_sure + '</a>';
-
-                //3 取消按钮有吗
-                if (arg.hasOwnProperty('btn_cancel')) {
-                    btn_html += '<a href="javascript:void(0);"  class="c_alert_btn cancel">' + arg.btn_cancel + '</a>';
-                    //取消的回调有吗
-                    if (arg.hasOwnProperty('callback_cancel')) {
-                        $alertEle.one("click", '.c_alert_btn.cancel', arg.callback_cancel);
-                    }
-                }
-
-
-                //4 内容是文字还是图片
-                if (is_pic(contentText)) {
-                    //内容是图片
-                    contentHtml = '<p ><img src=\"' + contentText + '\"/></p>';
-                } else {
-                    //内容是文本
-                    contentHtml = '<div style="padding:0 100px 50px 100px;">' + contentText + '</div>';
-                }
-
-
-                //5 加上按钮
-                contentHtml += btn_html;
-
+            // 找一下有没有空的alert-con，不然就加一个。
+            if ($('.c_alert .con:empty').length === 0) {
+                var class_alertNum = 'num' + (++this.AlertNum);
+                $body.prepend('<div class="c_alert ' + class_alertNum + '" ><div class="con" ></div></div>');
+                $alertEle = $('.c_alert.' + class_alertNum);
             } else {
-                //简单版本：参数是contentText,btnText，
-                contentText = arguments[0]; //第一个参数 内容
-                var btnText = arguments[1]; //第二个参数 按钮（只有一个按钮）
-                !btnText && (btnText = "确定");
+                $alertEle = $('.c_alert .con:empty').eq(0).parents('.c_alert');
+            }
+            console.dir($alertEle);
+           
 
-
-                if (is_pic(contentText)) {
-                    //内容是图片
-                    contentHtml = '<p ><img src=\"' + contentText + '\" /></p>';
-
-                } else {
-                    //内容是文本
-                    contentHtml = '<div style="padding:0 100px 50px 100px;">' + contentText + '</div>';
-
-                }
-                //加上按钮
-                contentHtml += '<a href="javascript:void(0);"  class="c_alert_btn sure">' + btnText + '</a>';
+            var btnHtmls,contentHtml;
+             
+            // 根据回掉和参数判断按钮的有无。
+            if (_param.callback_sure) {
+                _param.btn_sure_txt = params.btn_sure_txt || '确定';
+            } else {
+                _param.btn_sure_txt = params.btn_sure_txt || '';
             }
 
-            // -------------
-            var class_alertNum = 'num' + (++this.AlertNum);
-            $body.prepend('<div class="c_alert ' + class_alertNum + '" ><div class="con" ></div></div>');
-            $alertEle = $('.c_alert.' + class_alertNum);
+            if (_param.callback_cancel) {
+                _param.btn_cancel_txt = params.btn_calcel_txt || '取消';
+            } else {
+                _param.btn_calcel_txt = params.btn_calcel_txt || '';
+            }
+
+            // 是否需要绑定事件
+            if (_param.btn_sure_txt ) {
+
+                btnHtmls = '<a href="javascript:void(0);"  class="c_alert_btn sure">' + _param.btn_sure_txt + '</a>';
+                if(_param.callback_sure) {
+                    $alertEle.one("click", '.c_alert_btn.sure', _param.callback_sure);
+                }
+                
+            }
+            if (_param.btn_cancel_txt ) {
+
+                btnHtmls += '<a href="javascript:void(0);"  class="c_alert_btn cancel">' + _param.btn_cancel_txt + '</a>';
+                if (_param.callback_cancel) {
+                    $alertEle.one("click", '.c_alert_btn.cancel', _param.callback_cancel);
+                }
+                
+            }
+
+            contentHtml = contentHtml = '<div style="padding:0 100px 50px 100px;">' + _param.html + '</div>';
+            contentHtml += btnHtmls;
             $alertEle.toggleClass('active').find('.con').append(contentHtml);
-
-
-            function is_pic(str) {
-                var is_pic = true;
-                if (str.search(/(.jpg)|(.png)|(.gif)/i) == -1) {
-                    is_pic = false;
-                }
-                return is_pic;
-            }
-
-
-
         },
         /**
          * @param

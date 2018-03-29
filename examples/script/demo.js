@@ -4,6 +4,7 @@ require(['../../src/js/require-config'], function() {
         require(['juanchen-jquery-plugin'],function() {
             // $.isIE()
             $('#isIE').html($.isIE() + '');
+            $('#os').html($.detectOS());
             
             // $.fn.getPosRelativeToScreen()
             $('#showPosRelToScreen').html(JSON.stringify($('#dd').getPosRelativeToScreen()));
@@ -54,8 +55,17 @@ require(['../../src/js/require-config'], function() {
 
             // $.Alert()
             $('#btn-simple-alert').click(function() {
-                console.log('123456');
-                $.Alert('你好','get it');
+                $.Alert({
+                    html:'<h1>好好学习，天天向上</h1>',
+                    btn_sure_txt:"get it",
+                    btn_cancle_txt:"no",
+                    callback_sure: function() {
+
+                    },
+                    callback_cancel: function() {
+
+                    }
+                });
             });
 
             //  $.add_H5_music()
