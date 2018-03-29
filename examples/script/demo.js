@@ -54,11 +54,11 @@ require(['../../src/js/require-config'], function() {
             });
 
             // $.Alert()
-            $('#btn-simple-alert').click(function() {
+            $('#btn-alert-1').click(function() {
                 $.Alert({
                     html:'<h1>好好学习，天天向上</h1>',
                     btn_sure_txt:"get it",
-                    btn_cancle_txt:"no",
+                    btn_cancle_txt:"",
                     callback_sure: function() {
 
                     },
@@ -66,6 +66,14 @@ require(['../../src/js/require-config'], function() {
 
                     }
                 });
+            });
+            $('#btn-alert-2').click(function() {
+                $.Alert({
+                    html:'<h1>好好学习，天天向上</h1>'
+                });
+                setTimeout(function() {
+                    $('.c_alert.active').removeClass('active').find('.con').html('');
+                }, 2000);
             });
 
             //  $.add_H5_music()

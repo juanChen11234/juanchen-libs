@@ -338,10 +338,9 @@
             } else {
                 $alertEle = $('.c_alert .con:empty').eq(0).parents('.c_alert');
             }
-            console.dir($alertEle);
            
 
-            var btnHtmls,contentHtml;
+            var btnHtmls = '',contentHtml;
              
             // 根据回掉和参数判断按钮的有无。
             if (_param.callback_sure) {
