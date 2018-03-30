@@ -472,6 +472,81 @@
                 }
                
             });
+        },
+        /**
+         * 没有递归，只有两级，不够。
+         */
+        transArray2Object: function(params) {
+            var arr = params.arr;
+            var index = params.index;
+            var parentField= params.parentField;
+            var childField = params.childField || 'child';
+            // 
+            var res = {};
+            var len =arr.length,i, tempItem;
+            
+            var findParentPos_arr = function(pid, obj) {
+                var pos = [];
+                var targetId = pid;
+                var key01,key02;
+                var digui = function(obj22,id) {
+                    if (obj22 && obj22[childField]) {
+                        for (var key in obj22[childField]) {
+                            if (obj22[childField].hasOwnProperty(key)) {
+                                if (key == id) {
+                                    pos.push(key);
+                                } else {
+                                    digui(obj22[key],id);
+                                }
+                            }
+                        }
+                    }
+                    return '';
+                }
+                for (key01 in  obj) {
+                    if ( obj.hasOwnProperty(key01)) {
+                        if ( key01 == targetId) {
+                            pos.push(key01);
+                            return ;
+                        } else  {
+                            // 
+                            digui(obj[key01],targetId);  
+                            if (pos.lenght > 0) {
+                                pos.unshift(key01);
+                            }
+                        }
+                    }
+                }
+                return pos;
+            }
+            for (i = 0 ; i< len; i++) {
+                tempItem = arr[i];
+                tempItem[childField] = {};
+                var _index = tempItem[index];
+                // 
+                if (tempItem[parentField] === 0) {
+                    res[_index] = tempItem;
+
+                } else {
+                    var _parentPos_arr =  findParentPos_arr(tempItem[parentField], res);
+                
+                    if (_parentPos_arr.length > 0) {
+                        console.log(_parentPos_arr);
+                        var pos = res[_parentPos_arr[0]][childField];
+                        if (_parentPos_arr.length  < 1) {
+                            return;
+                        }
+                        
+                        for (var j = 1 ;j < _parentPos_arr.length ; j ++) {
+                            pos = pos[_parentPos_arr[j]][childField];
+                        }
+                        pos[_index] = tempItem;
+                    }
+                    
+                }
+            }
+
+            return res;
         }
     }
 

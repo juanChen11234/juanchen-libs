@@ -94,6 +94,26 @@ require(['../../src/js/require-config'], function() {
                 targetScrollTop: 0,         //顶部是0，正方向向下
                 allTime:200                 //滚动总时间   
             });
+
+            var objFromArray = $.transArray2Object({
+                arr: [
+                    {id: 1, pid: 0, name: 'a'},
+                    {id: 2, pid: 0, name: 'b'},
+                    {id: 3, pid: 0, name: 'c'},
+                    {id: 4, pid: 0, name: 'd'},
+                    {id: 5, pid: 1, name: 'a01'},
+                    {id: 6, pid: 1, name: 'a02'},
+                    {id: 7, pid: 1, name: 'a03'},
+                    {id: 8, pid: 2, name: 'b01'},
+                    {id: 9, pid: 2, name: 'b02'},
+                    {id: 10,pid: 3, name: 'c01'},
+                    {id: 11,pid: 5, name: 'a0101'}
+                ],
+                index: 'id',
+                parentField: 'pid',
+                childField: 'children'
+            });
+            console.dir(objFromArray);
            
 
         });
